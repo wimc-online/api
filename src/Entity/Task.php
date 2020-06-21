@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\TaskRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,6 +30,16 @@ class Task
      * @ORM\Column(type="boolean")
      */
     private $is_processing;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Subtask::class, mappedBy="task", orphanRemoval=true)
+     */
+    private $subtasks;
+
+    public function __construct()
+    {
+        $this->subtasks = new ArrayCollection();
+    }
 
     public function getId(): ?string
     {
@@ -54,6 +66,37 @@ class Task
     public function setIsProcessing(bool $is_processing): self
     {
         $this->is_processing = $is_processing;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Subtask[]
+     */
+    public function getSubtasks(): Collection
+    {
+        return $this->subtasks;
+    }
+
+    public function addSubtask(Subtask $subtask): self
+    {
+        if (!$this->subtasks->contains($subtask)) {
+            $this->subtasks[] = $subtask;
+            $subtask->setTask($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubtask(Subtask $subtask): self
+    {
+        if ($this->subtasks->contains($subtask)) {
+            $this->subtasks->removeElement($subtask);
+            // set the owning side to null (unless already changed)
+            if ($subtask->getTask() === $this) {
+                $subtask->setTask(null);
+            }
+        }
 
         return $this;
     }

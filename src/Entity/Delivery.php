@@ -29,6 +29,11 @@ class Delivery
      */
     private $address;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Subtask::class, mappedBy="delivery", cascade={"persist", "remove"})
+     */
+    private $subtask;
+
     public function getId(): ?string
     {
         return $this->id;
@@ -54,6 +59,23 @@ class Delivery
     public function setAddress(string $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getSubtask(): ?Subtask
+    {
+        return $this->subtask;
+    }
+
+    public function setSubtask(Subtask $subtask): self
+    {
+        $this->subtask = $subtask;
+
+        // set the owning side of the relation if necessary
+        if ($subtask->getDelivery() !== $this) {
+            $subtask->setDelivery($this);
+        }
 
         return $this;
     }
