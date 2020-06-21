@@ -4,5 +4,6 @@
 /config/secrets/prod/prod.decrypt.private.php
 /Dockerfile
 /public/bundles/
+/README.md
 /var/
 /vendor/

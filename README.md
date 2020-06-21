@@ -1,8 +1,19 @@
 # API for "Where is my courier?"
 
-## Build
+## Prerequisites
 ```shell script
-docker build -t wimc-online/api:latest .
+# check if docker is installed
+command -v docker
+# login to github packages with personal access token
+docker login https://docker.pkg.github.com
+```
+
+## Deployment
+```shell script
+# build and tag image
+docker build -t docker.pkg.github.com/wimc-online/api/api:latest .
+# publish image
+docker push docker.pkg.github.com/wimc-online/api/api:latest
 ```
 
 ## Development
@@ -11,14 +22,11 @@ docker build -t wimc-online/api:latest .
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec bash
 # install composer dependencies
 composer install
-# set dev environment
-composer dump-env dev
-# generate entity
-bin/console make:entity --api-resource
 # sync database tables structure
 bin/console doctrine:schema:update --force
 ```
 
 ## Links
+- [About GitHub Packages - about tokens](https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens)
 - webdevops/php-apache [documentation](https://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-apache.html), [dockerhub](https://hub.docker.com/r/webdevops/php-apache)
 - api-platform [documentation](https://api-platform.com/docs)
