@@ -10,10 +10,8 @@ docker login https://docker.pkg.github.com
 
 ## Deployment
 ```shell script
-# build and tag image
-docker build -t docker.pkg.github.com/wimc-online/api/api:latest .
-# publish image
-docker push docker.pkg.github.com/wimc-online/api/api:latest
+# sync database tables structure
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api bin/console doctrine:schema:update --force
 ```
 
 ## Development
@@ -24,6 +22,13 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec bash
 composer install
 # sync database tables structure
 bin/console doctrine:schema:update --force
+```
+...
+```shell script
+# build and tag image
+docker build -t docker.pkg.github.com/wimc-online/api/api:latest .
+# publish image
+docker push docker.pkg.github.com/wimc-online/api/api:latest
 ```
 
 ## Links
