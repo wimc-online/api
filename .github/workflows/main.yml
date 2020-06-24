@@ -1,5 +1,8 @@
 name: Publish Docker image
 on:
+  push:
+    branches:
+    - master
   release:
     types: [published]
 jobs:
@@ -16,5 +19,4 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
           repository: wimc-online/api/api
-          tags: latest
           tag_with_ref: true
