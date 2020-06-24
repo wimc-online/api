@@ -1,12 +1,6 @@
 # API for "Where is my courier?"
 ![Publish Docker image](https://github.com/wimc-online/api/workflows/Publish%20Docker%20image/badge.svg)
 
-## Deployment
-```shell script
-# sync database tables structure
-bin/console doctrine:schema:update --force
-```
-
 ## Development
 ```shell script
 # check if docker is installed
