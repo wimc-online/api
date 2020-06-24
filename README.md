@@ -1,34 +1,28 @@
 # API for "Where is my courier?"
 
-## Prerequisites
-```shell script
-# check if docker is installed
-command -v docker
-# login to github packages with personal access token
-docker login https://docker.pkg.github.com
-```
-
 ## Deployment
 ```shell script
 # sync database tables structure
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec api bin/console doctrine:schema:update --force
+bin/console doctrine:schema:update --force
 ```
 
 ## Development
 ```shell script
-# switch to container shell from docker repository
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec bash
+# check if docker is installed
+command -v docker
+# build docker image
+docker build -t docker.pkg.github.com/wimc-online/api/api:latest .
+# run docker image
+IMAGE=$(docker run -p 80:80 -v `pwd`:/app -d docker.pkg.github.com/wimc-online/api/api:latest)
 # install composer dependencies
-composer install
+docker exec -it $IMAGE composer install
 # sync database tables structure
-bin/console doctrine:schema:update --force
+docker exec -it $IMAGE bin/console doctrine:schema:update --force
 ```
 ...
 ```shell script
-# build and tag image
-docker build -t docker.pkg.github.com/wimc-online/api/api:latest .
-# publish image
-docker push docker.pkg.github.com/wimc-online/api/api:latest
+# stop container
+docker stop $IMAGE
 ```
 
 ## Links
