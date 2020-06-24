@@ -12,8 +12,8 @@ jobs:
       - name: Push to GitHub Package Registry
         uses: docker/build-push-action@v1.1.0
         with:
-          username: ${{ secrets.GPR_USERNAME }}
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: wimc-online/api/api
+          repository: ${{ GITHUB_REPOSITORY }}/api
           tags: latest
