@@ -1,4 +1,5 @@
 # API for "Where is my courier?"
+![Publish Docker image](https://github.com/wimc-online/api/workflows/Publish%20Docker%20image/badge.svg)
 
 ## Deployment
 ```shell script
