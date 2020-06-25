@@ -7,20 +7,20 @@
 command -v docker
 # build docker image
 docker build -t docker.pkg.github.com/wimc-online/api/api:latest .
-# run docker image
-IMAGE=$(docker run -p 80:80 -v `pwd`:/app -d docker.pkg.github.com/wimc-online/api/api:latest)
-# install composer dependencies
-docker exec -it $IMAGE composer install
-# sync database tables structure
-docker exec -it $IMAGE bin/console doctrine:schema:update --force
+# run docker containers
+docker run --name api_db -p 3306:3306 -e MYSQL_DATABASE=api -e MYSQL_PASSWORD=password -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=user --rm -d mysql:5.7
+docker run --name api --link api_db:api_db -p 80:80 -v `pwd`:/app --rm -d docker.pkg.github.com/wimc-online/api/api:latest
+# wait for container to start
+docker logs -f api
+# install composer dev dependencies
+docker exec -it api composer install
 ```
 ...
 ```shell script
 # stop container
-docker stop $IMAGE
+docker stop api api_db
 ```
 
 ## Links
-- [About GitHub Packages - about tokens](https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens)
 - webdevops/php-apache [documentation](https://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-apache.html), [dockerhub](https://hub.docker.com/r/webdevops/php-apache)
 - api-platform [documentation](https://api-platform.com/docs)
