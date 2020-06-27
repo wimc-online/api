@@ -31,7 +31,5 @@ RUN set -x \
     && composer dump-autoload --optimize \
     && composer run-script post-install-cmd \
     && composer dump-env $APP_ENV
-ENV APP_ENV="" \
-    APP_DEBUG="" \
-    WEB_DOCUMENT_ROOT=$APP_ROOT/public
+ENV WEB_DOCUMENT_ROOT=$APP_ROOT/public
 USER root
