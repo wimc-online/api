@@ -1,10 +1,15 @@
-FROM webdevops/php-apache:7.4
+FROM webdevops/php-apache-dev:7.4
 
 RUN set -x \
     && apt-install \
-        wait-for-it \
+       jq \
+       wait-for-it \
     && docker-run-bootstrap \
     && docker-image-cleanup
+
+ENV PHP_DISMOD=ioncube,redis \
+    XDEBUG_REMOTE_AUTOSTART=1 \
+    XDEBUG_IDE_KEY=PHPSTORM
 
 ENV APP_ROOT=$WEB_DOCUMENT_ROOT \
     APP_USER=$APPLICATION_USER \
