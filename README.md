@@ -10,7 +10,7 @@ docker build -t docker.pkg.github.com/wimc-online/api/api:latest .
 # run database container
 docker run --name api_db -p 3306:3306 -e MYSQL_DATABASE=api -e MYSQL_PASSWORD=password -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=user --rm -d mysql:5.7
 # set public key from auth -> realm settings -> keys -> public key
-printf -v JWT_PUBLIC_KEY '-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----' $(curl "https://auth.wimc.online/auth/realms/wimc.localhost" | jq -r ".public_key")
+JWT_PUBLIC_KEY=$(curl "https://auth.wimc.online/auth/realms/wimc.localhost" | jq -r ".public_key")
 # run api container
 docker run --name api --link api_db:api_db -p 80:80 -e APP_ENV=dev -e APP_DEBUG=1 -e JWT_PUBLIC_KEY=$JWT_PUBLIC_KEY -v `pwd`:/app --rm -d docker.pkg.github.com/wimc-online/api/api:latest
 # wait for container to start
