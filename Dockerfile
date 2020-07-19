@@ -1,4 +1,5 @@
-FROM webdevops/php-apache-dev:7.4
+ARG IMG_EXT=""
+FROM webdevops/php-apache$IMG_EXT:7.4
 
 RUN set -x \
     && apt-install \
@@ -7,9 +8,7 @@ RUN set -x \
     && docker-run-bootstrap \
     && docker-image-cleanup
 
-ENV PHP_DISMOD=ioncube,redis \
-    XDEBUG_REMOTE_AUTOSTART=1 \
-    XDEBUG_IDE_KEY=PHPSTORM
+ENV PHP_DISMOD=ioncube,redis
 
 ENV APP_ROOT=$WEB_DOCUMENT_ROOT \
     APP_USER=$APPLICATION_USER \
