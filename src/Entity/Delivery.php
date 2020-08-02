@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource()
- * @ORM\Entity(repositoryClass=DeliveryRepository::class)
  * @ApiFilter(ExistsFilter::class, properties={"subtask"})
+ * @ORM\Entity(repositoryClass=DeliveryRepository::class)
  */
 class Delivery
 {
