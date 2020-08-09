@@ -4,25 +4,32 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
-use App\Controller\GetTaskFeaturedCouriers;
+use App\Dto\TaskCreateInput as CreateInput;
+use App\Dto\TaskUpdateInput as UpdateInput;
+use App\Dto\TaskOutput as Output;
 use App\Repository\TaskRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource(itemOperations={
- *     "get",
- *     "put",
- *     "delete",
- *     "patch",
- *     "featured_task"={
- *         "method"="GET",
- *         "path"="/tasks/{id}/featured_couriers",
- *         "controller"=GetTaskFeaturedCouriers::class,
- *     },
- * })
+ * @ApiResource(
+ *   output=Output::class,
+ *   collectionOperations={
+ *       "get",
+ *       "post"={"input"=CreateInput::class},
+ *   },
+ *   itemOperations={
+ *       "get",
+ *       "patch"={"input"=UpdateInput::class},
+ *       "delete",
+ *   },
+ *   normalizationContext={
+ *       "skip_null_values"=false,
+ *   },
+ * )
  * @ApiFilter(ExistsFilter::class, properties={"courier"})
  * @ORM\Entity(repositoryClass=TaskRepository::class)
  */
@@ -46,6 +53,7 @@ class Task
     private $is_processing;
 
     /**
+     * @ApiSubresource()
      * @ORM\OneToMany(targetEntity=Subtask::class, mappedBy="task", orphanRemoval=true)
      */
     private $subtasks;

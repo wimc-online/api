@@ -5,11 +5,26 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
+use App\Dto\DeliveryCreateInput as CreateInput;
+use App\Dto\DeliveryOutput as Output;
 use App\Repository\DeliveryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *   output=Output::class,
+ *   collectionOperations={
+ *       "get",
+ *       "post"={"input"=CreateInput::class},
+ *   },
+ *   itemOperations={
+ *       "get",
+ *       "delete",
+ *   },
+ *   normalizationContext={
+ *       "skip_null_values"=false,
+ *   },
+ * )
  * @ApiFilter(ExistsFilter::class, properties={"subtask"})
  * @ORM\Entity(repositoryClass=DeliveryRepository::class)
  */
