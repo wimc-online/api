@@ -3,46 +3,18 @@
 
 ## Development
 ```shell script
-# check if docker is installed
-command -v docker
-# build docker image
-docker build --build-arg IMG_EXT=-dev -t docker.pkg.github.com/wimc-online/api/api-dev:latest .
-# run database container
-docker run --name api_db -p 3306:3306 -e MYSQL_DATABASE=api -e MYSQL_PASSWORD=password -e MYSQL_ROOT_PASSWORD=password -e MYSQL_USER=user --rm -d mysql:5.7
-# set public key from auth -> realm settings -> keys -> public key
-JWT_PUBLIC_KEY=$(curl "https://auth.wimc.online/auth/realms/wimc.localhost" | jq -r ".public_key")
-# run api container
-docker run --name api --link api_db:api_db -p 80:80 -e APP_ENV=dev -e APP_DEBUG=1 -e XDEBUG_REMOTE_AUTOSTART=1 -e XDEBUG_IDE_KEY=PHPSTORM -e JWT_PUBLIC_KEY=$JWT_PUBLIC_KEY -v `pwd`:/app --rm -d docker.pkg.github.com/wimc-online/api/api-dev:latest
-# wait for container to start
-docker logs -f api
-# switch to container shell
-docker exec -it -u application:application api bash
+./run.sh
+./shell.sh bash
 ```
 ...
 ```shell script
-# stop container
-docker stop api api_db
+./end.sh
 ```
 
 ## Misc
 - get jwt token
 ```shell script
-AUTH_DOMAIN=auth.wimc.online
-AUTH_REALM_NAME=wimc.localhost
-AUTH_CLIENT_ID=api.wimc.localhost
-API_USERNAME=courier
-read -rs API_PASSWORD
-```
-...
-```shell script
-API_TOKEN=$(curl -X POST "https://$AUTH_DOMAIN/auth/realms/$AUTH_REALM_NAME/protocol/openid-connect/token" \
- -H "Content-Type: application/x-www-form-urlencoded" \
- -d "client_id=$AUTH_CLIENT_ID" \
- -d "username=$API_USERNAME" \
- -d "password=$API_PASSWORD" \
- -d "grant_type=password" \
- | jq -r ".access_token")
-echo "Bearer $API_TOKEN"
+./shell.sh ./bin/token.sh
 ```
 
 ## Links
