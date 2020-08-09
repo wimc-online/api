@@ -5,6 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
+use App\Controller\GetDeliveryFeaturedCouriers;
+use App\Dto\CourierOutput;
 use App\Dto\DeliveryCreateInput as CreateInput;
 use App\Dto\DeliveryOutput as Output;
 use App\Repository\DeliveryRepository;
@@ -20,6 +22,12 @@ use Doctrine\ORM\Mapping as ORM;
  *   itemOperations={
  *       "get",
  *       "delete",
+ *       "featured_couriers"={
+ *           "method"="GET",
+ *           "path"="/deliveries/{id}/featured_couriers",
+ *           "controller"=GetDeliveryFeaturedCouriers::class,
+ *           "output"=CourierOutput::class,
+ *       },
  *   },
  *   normalizationContext={
  *       "skip_null_values"=false,
