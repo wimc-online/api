@@ -6,7 +6,9 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 use App\Controller\GetDeliveryFeaturedCouriers;
+use App\Controller\PostDeliveryCourier;
 use App\Dto\CourierOutput;
+use App\Dto\DeliveryCourierCreateInput;
 use App\Dto\DeliveryCreateInput as CreateInput;
 use App\Dto\DeliveryOutput as Output;
 use App\Repository\DeliveryRepository;
@@ -27,6 +29,13 @@ use Doctrine\ORM\Mapping as ORM;
  *           "path"="/deliveries/{id}/featured_couriers",
  *           "controller"=GetDeliveryFeaturedCouriers::class,
  *           "output"=CourierOutput::class,
+ *       },
+ *       "courier"={
+ *           "method"="POST",
+ *           "path"="/deliveries/{id}/courier",
+ *           "controller"=PostDeliveryCourier::class,
+ *           "input"=DeliveryCourierCreateInput::class,
+ *           "output"=Output::class,
  *       },
  *   },
  *   normalizationContext={
