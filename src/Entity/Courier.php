@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Dto\CourierCreateInput as CreateInput;
 use App\Dto\CourierOutput as Output;
 use App\Filter\ActiveCourierFilter;
@@ -42,6 +43,7 @@ class Courier
     private $positions;
 
     /**
+     * @ApiSubresource()
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="courier", orphanRemoval=true)
      */
     private $tasks;
