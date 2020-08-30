@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Dto\CourierCreateInput as CreateInput;
 use App\Dto\CourierOutput as Output;
+use App\Filter\ActiveCourierFilter;
 use App\Repository\CourierRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,6 +24,7 @@ use Doctrine\ORM\Mapping as ORM;
  *       "delete",
  *   },
  * )
+ * @ApiFilter(ActiveCourierFilter::class, properties={"active"})
  * @ORM\Entity(repositoryClass=CourierRepository::class)
  */
 class Courier
