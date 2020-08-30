@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Dto\SubtaskCreateInput as CreateInput;
 use App\Dto\SubtaskUpdateInput as UpdateInput;
 use App\Dto\SubtaskOutput as Output;
 use App\Repository\SubtaskRepository;
@@ -12,9 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ApiResource(
  *   output=Output::class,
- *   collectionOperations={
- *       "post"={"input"=CreateInput::class},
- *   },
+ *   collectionOperations={},
  *   itemOperations={
  *       "get",
  *       "patch"={"input"=UpdateInput::class},

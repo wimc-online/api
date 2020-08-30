@@ -7,7 +7,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
-use App\Dto\TaskCreateInput as CreateInput;
 use App\Dto\TaskUpdateInput as UpdateInput;
 use App\Dto\TaskOutput as Output;
 use App\Repository\TaskRepository;
@@ -20,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
  *   output=Output::class,
  *   collectionOperations={
  *       "get",
- *       "post"={"input"=CreateInput::class},
  *   },
  *   itemOperations={
  *       "get",
