@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use App\Dto\TaskCreateInput as CreateInput;
 use App\Dto\TaskUpdateInput as UpdateInput;
 use App\Dto\TaskOutput as Output;
@@ -31,6 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  *   },
  * )
  * @ApiFilter(ExistsFilter::class, properties={"courier"})
+ * @ApiFilter(BooleanFilter::class, properties={"is_processing"})
  * @ORM\Entity(repositoryClass=TaskRepository::class)
  */
 class Task
