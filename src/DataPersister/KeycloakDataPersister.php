@@ -26,12 +26,19 @@ final class KeycloakDataPersister implements ContextAwareDataPersisterInterface
 
     public function persist($data, array $context = [])
     {
-        $result = $this->decorated->persist($data, $context);
-
         if ($data instanceof Courier && ($context['collection_operation_name'] ?? null) === 'post') {
             if (!$this->createCourier($data)) {
-                $this->decorated->remove($data, $context);
                 throw new RuntimeException('Cannot create courier in Keycloak.');
+            }
+        }
+
+        $result = $this->decorated->persist($data, $context);
+
+        if ($result instanceof Courier && ($context['collection_operation_name'] ?? null) === 'post') {
+            if (!$this->updateCourierId($result)) {
+                $this->decorated->remove($result, $context);
+                $this->removeCourier($result);
+                throw new RuntimeException('Cannot update courierId in Keycloak.');
             }
         }
 
@@ -54,7 +61,20 @@ final class KeycloakDataPersister implements ContextAwareDataPersisterInterface
     private function createCourier(Courier $courier): bool
     {
         try {
-            $this->keycloak->createCourier($courier);
+            $user = $this->keycloak->createCourier($courier);
+        } catch (RuntimeException $exception) {
+            return false;
+        }
+
+        $courier->setId($user['id']);
+
+        return true;
+    }
+
+    private function updateCourierId(Courier $courier): bool
+    {
+        try {
+            $this->keycloak->updateCourierId($courier);
         } catch (RuntimeException $exception) {
             return false;
         }

@@ -44,36 +44,62 @@ class Keycloak
     /**
      * @throws RuntimeException
      */
-    public function createCourier(Courier $courier): void
+    public function createCourier(Courier $courier): array
     {
         if (!$this->isAuthorized()) {
             $this->authorize();
         }
 
+        $firstName = 'Imię';
+        $lastName = 'Nazwisko';
+        $email = 'mistyfiky@gmail.com';
+
         $options = [
+            CURLOPT_HEADER => true,
             CURLOPT_URL => "{$this->adminApiUrl}/users",
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => json_encode([
-                'attributes' => [
-                    'courierId' => $courier->getId(),
-                ],
-//                'email' => null,
+                'email' => $email,
                 'enabled' => true,
+                'firstName' => $firstName,
                 'realmRoles' => [
                     'courier',
                 ],
-                'username' => $courier->getId(),
+                'lastName' => $lastName,
+                'username' => mb_strtolower("{$firstName}.{$lastName}"),
             ]),
         ] + $this->getDefaultOptions();
 
         $ch = curl_init();
         curl_setopt_array($ch, $options);
-        curl_exec($ch);
+        $output = curl_exec($ch);
+        $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $header = substr($output, 0, $headerSize);
         $responseCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         curl_close($ch);
         if (201 !== $responseCode) {
             throw new RuntimeException('Error creating courier in Keycloak.');
         }
+
+        $headerLines = explode("\r\n", $header);
+        array_shift($headerLines); // response code
+        $headers = [];
+        foreach ($headerLines as $i => $line) {
+            if (empty($line)) {
+                continue;
+            }
+            [$key, $value] = explode(': ', $line, 2);
+            $headers[mb_strtolower($key)] = $value;
+        }
+        if (empty($headers['location'])) {
+            throw new RuntimeException('Error parsing courier from Keycloak.');
+        }
+
+        $locationEls = explode('/', $headers['location']);
+
+        return [
+            'id' =>$locationEls[array_key_last($locationEls)]
+        ];
     }
 
     /**
@@ -85,9 +111,8 @@ class Keycloak
             $this->authorize();
         }
 
-        $query = http_build_query(['username' => $courier->getId(), 'max' => 1]);
         $options = [
-            CURLOPT_URL => "{$this->adminApiUrl}/users?{$query}",
+            CURLOPT_URL => "{$this->adminApiUrl}/users{$courier->getId()}",
         ] + $this->getDefaultOptions();
 
         $ch = curl_init();
@@ -99,12 +124,42 @@ class Keycloak
             throw new RuntimeException('Error fetching courier from Keycloak.');
         }
 
-        $response = json_decode($output, true);
-        if (empty($response[0]['id'])) {
+        $user = json_decode($output, true);
+        if (empty($user['id'])) {
             throw new RuntimeException('Error parsing courier from Keycloak.');
         }
 
-        return $response[0];
+        return $user;
+    }
+
+    /**
+     * @throws RuntimeException
+     */
+    public function updateCourierId(Courier $courier): void
+    {
+        if (!$this->isAuthorized()) {
+            $this->authorize();
+        }
+
+        $options = [
+            CURLOPT_URL => "{$this->adminApiUrl}/users/{$courier->getId()}",
+            CURLOPT_CUSTOMREQUEST => 'PUT',
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode([
+                'attributes' => [
+                    'courierId' => $courier->getId(),
+                ],
+            ]),
+        ] + $this->getDefaultOptions();
+
+        $ch = curl_init();
+        curl_setopt_array($ch, $options);
+        curl_exec($ch);
+        $responseCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+        curl_close($ch);
+        if (204 !== $responseCode) {
+            throw new RuntimeException('Error updating courier in Keycloak.');
+        }
     }
 
     /**
@@ -116,14 +171,8 @@ class Keycloak
             $this->authorize();
         }
 
-        try {
-            $user = $this->readCourier($courier);
-        } catch (RuntimeException $exception) {
-            return; // let's pretend that if we can't find him he doesn't exists
-        }
-
         $options = [
-            CURLOPT_URL => "{$this->adminApiUrl}/users/{$user['id']}",
+            CURLOPT_URL => "{$this->adminApiUrl}/users/{$courier->getId()}",
             CURLOPT_CUSTOMREQUEST => 'DELETE',
         ] + $this->getDefaultOptions();
 
