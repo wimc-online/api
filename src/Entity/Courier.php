@@ -32,7 +32,6 @@ class Courier
 {
     /**
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid")
      */
     private $id;
@@ -57,6 +56,13 @@ class Courier
     public function getId(): ?string
     {
         return $this->id;
+    }
+
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
