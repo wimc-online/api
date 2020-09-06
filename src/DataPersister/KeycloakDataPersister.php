@@ -27,69 +27,32 @@ final class KeycloakDataPersister implements ContextAwareDataPersisterInterface
     public function persist($data, array $context = [])
     {
         if ($data instanceof Courier && ($context['collection_operation_name'] ?? null) === 'post') {
-            if (!$this->createCourier($data)) {
+            try {
+                $data = $this->keycloak->createCourier($data);
+            } catch (RuntimeException $exception) {
                 throw new RuntimeException('Cannot create courier in Keycloak.');
             }
-        }
-
-        $result = $this->decorated->persist($data, $context);
-
-        if ($result instanceof Courier && ($context['collection_operation_name'] ?? null) === 'post') {
-            if (!$this->updateCourierId($result)) {
-                $this->decorated->remove($result, $context);
-                $this->removeCourier($result);
+            try {
+                $data = $this->keycloak->updateCourierId($data);
+            } catch (RuntimeException $exception) {
+                $this->keycloak->deleteCourier($data);
                 throw new RuntimeException('Cannot update courierId in Keycloak.');
             }
         }
 
-        return $result;
+        return $this->decorated->persist($data, $context);
     }
 
     public function remove($data, array $context = [])
     {
-        $result = $this->decorated->remove($data, $context);
+        $this->decorated->remove($data, $context);
 
         if ($data instanceof Courier && ($context['item_operation_name'] ?? null) === 'delete') {
-            if (!$this->removeCourier($data)) {
+            try {
+                $this->keycloak->deleteCourier($data);
+            } catch (RuntimeException $exception) {
                 throw new RuntimeException('Cannot remove courier from Keycloak.');
             }
         }
-
-        return $result;
-    }
-
-    private function createCourier(Courier $courier): bool
-    {
-        try {
-            $user = $this->keycloak->createCourier($courier);
-        } catch (RuntimeException $exception) {
-            return false;
-        }
-
-        $courier->setId($user['id']);
-
-        return true;
-    }
-
-    private function updateCourierId(Courier $courier): bool
-    {
-        try {
-            $this->keycloak->updateCourierId($courier);
-        } catch (RuntimeException $exception) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private function removeCourier(Courier $courier): bool
-    {
-        try {
-            $this->keycloak->deleteCourier($courier);
-        } catch (RuntimeException $exception) {
-            return false;
-        }
-
-        return true;
     }
 }

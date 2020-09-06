@@ -3,11 +3,19 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use ApiPlatform\Core\Validator\ValidatorInterface;
 use App\Dto\CourierCreateInput as Input;
 use App\Entity\Courier as Entity;
 
 final class CourierCreateInputDataTransformer implements DataTransformerInterface
 {
+    private $validator;
+
+    public function __construct(ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -27,7 +35,12 @@ final class CourierCreateInputDataTransformer implements DataTransformerInterfac
      */
     public function transform($data, string $to, array $context = [])
     {
+        $this->validator->validate($data);
+
         $entity = new Entity();
+        $entity->setEmail($data->email);
+        $entity->setFirstName($data->firstName);
+        $entity->setLastName($data->lastName);
 
         return $entity;
     }

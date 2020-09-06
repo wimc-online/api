@@ -44,29 +44,25 @@ class Keycloak
     /**
      * @throws RuntimeException
      */
-    public function createCourier(Courier $courier): array
+    public function createCourier(Courier $courier): Courier
     {
         if (!$this->isAuthorized()) {
             $this->authorize();
         }
-
-        $firstName = 'Imię';
-        $lastName = 'Nazwisko';
-        $email = 'mistyfiky@gmail.com';
 
         $options = [
             CURLOPT_HEADER => true,
             CURLOPT_URL => "{$this->adminApiUrl}/users",
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => json_encode([
-                'email' => $email,
+                'email' => $courier->getEmail(),
                 'enabled' => true,
-                'firstName' => $firstName,
+                'firstName' => $courier->getFirstName(),
+                'lastName' => $courier->getLastName(),
                 'realmRoles' => [
                     'courier',
                 ],
-                'lastName' => $lastName,
-                'username' => mb_strtolower("{$firstName}.{$lastName}"),
+                'username' => mb_strtolower("{$courier->getFirstName()}.{$courier->getLastName()}"),
             ]),
         ] + $this->getDefaultOptions();
 
@@ -94,48 +90,17 @@ class Keycloak
         if (empty($headers['location'])) {
             throw new RuntimeException('Error parsing courier from Keycloak.');
         }
-
         $locationEls = explode('/', $headers['location']);
 
-        return [
-            'id' =>$locationEls[array_key_last($locationEls)]
-        ];
+        $courier->setId($locationEls[array_key_last($locationEls)]);
+
+        return $courier;
     }
 
     /**
      * @throws RuntimeException
      */
-    public function readCourier(Courier $courier): array
-    {
-        if (!$this->isAuthorized()) {
-            $this->authorize();
-        }
-
-        $options = [
-            CURLOPT_URL => "{$this->adminApiUrl}/users{$courier->getId()}",
-        ] + $this->getDefaultOptions();
-
-        $ch = curl_init();
-        curl_setopt_array($ch, $options);
-        $output = curl_exec($ch);
-        $responseCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
-        curl_close($ch);
-        if (200 !== $responseCode) {
-            throw new RuntimeException('Error fetching courier from Keycloak.');
-        }
-
-        $user = json_decode($output, true);
-        if (empty($user['id'])) {
-            throw new RuntimeException('Error parsing courier from Keycloak.');
-        }
-
-        return $user;
-    }
-
-    /**
-     * @throws RuntimeException
-     */
-    public function updateCourierId(Courier $courier): void
+    public function updateCourierId(Courier $courier): Courier
     {
         if (!$this->isAuthorized()) {
             $this->authorize();
@@ -160,6 +125,8 @@ class Keycloak
         if (204 !== $responseCode) {
             throw new RuntimeException('Error updating courier in Keycloak.');
         }
+
+        return $courier;
     }
 
     /**
@@ -181,6 +148,9 @@ class Keycloak
         curl_exec($ch);
         $responseCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         curl_close($ch);
+        if (404 === $responseCode) {
+            return;
+        }
         if (204 !== $responseCode) {
             throw new RuntimeException('Error removing courier from Keycloak.');
         }
