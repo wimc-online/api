@@ -30,3 +30,14 @@ services:
         decorates: 'api_platform.swagger.normalizer.api_gateway'
         arguments: [ '@App\Swagger\SwaggerDecorator.inner' ]
         autoconfigure: false
+
+    App\DataPersister\KeycloakDataPersister:
+        decorates: 'api_platform.doctrine.orm.data_persister'
+        autoconfigure: false
+
+    App\Service\Keycloak:
+        arguments:
+            - '%env(resolve:KEYCLOAK_DOMAIN)%'
+            - '%env(resolve:KEYCLOAK_REALM)%'
+            - '%env(resolve:KEYCLOAK_CLIENT_ID)%'
+            - '%env(resolve:KEYCLOAK_CLIENT_SECRET)%'

@@ -4,7 +4,9 @@
     "require": {
         "php": "^7.2.5",
         "ext-ctype": "*",
+        "ext-curl": "^7.4",
         "ext-iconv": "*",
+        "ext-json": "^7.4",
         "api-platform/api-pack": "^1.2",
         "lexik/jwt-authentication-bundle": "^2.8",
         "ramsey/uuid": "^4.1",
