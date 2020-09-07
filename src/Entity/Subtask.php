@@ -33,7 +33,7 @@ class Subtask
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Task::class, inversedBy="subtasks")
+     * @ORM\ManyToOne(targetEntity=Task::class, inversedBy="subtasks", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $task;

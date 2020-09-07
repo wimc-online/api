@@ -43,7 +43,7 @@ class Task
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Courier::class, inversedBy="tasks")
+     * @ORM\ManyToOne(targetEntity=Courier::class, inversedBy="tasks", fetch="EAGER")
      */
     private $courier;
 

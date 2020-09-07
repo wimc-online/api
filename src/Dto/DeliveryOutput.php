@@ -25,4 +25,9 @@ final class DeliveryOutput
      * @var string
      */
     public $lng;
+
+    /**
+     * @var CourierOutput
+     */
+    public $courier;
 }

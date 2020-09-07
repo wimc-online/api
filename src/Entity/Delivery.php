@@ -65,7 +65,7 @@ class Delivery
     private $address;
 
     /**
-     * @ORM\OneToOne(targetEntity=Subtask::class, mappedBy="delivery", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Subtask::class, mappedBy="delivery", cascade={"persist", "remove"}, fetch="EAGER")
      */
     private $subtask;
 
@@ -113,5 +113,19 @@ class Delivery
         }
 
         return $this;
+    }
+
+    public function getCourier(): ?Courier
+    {
+        $subtask = $this->getSubtask();
+        if (null === $subtask) {
+            return null;
+        }
+        $task = $subtask->getTask();
+        if (null === $task) {
+            return null;
+        }
+
+        return $task->getCourier();
     }
 }
