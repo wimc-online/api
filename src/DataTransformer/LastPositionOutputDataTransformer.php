@@ -3,19 +3,11 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\CourierOutput;
-use App\Dto\DeliveryOutput as Output;
-use App\Entity\Delivery as Entity;
+use App\Dto\LastPositionOutput as Output;
+use App\Entity\Position as Entity;
 
-final class DeliveryOutputDataTransformer implements DataTransformerInterface
+final class LastPositionOutputDataTransformer implements DataTransformerInterface
 {
-    private $courierOutputDataTransformer;
-
-    public function __construct(CourierOutputDataTransformer $courierOutputDataTransformer)
-    {
-        $this->courierOutputDataTransformer = $courierOutputDataTransformer;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -36,14 +28,10 @@ final class DeliveryOutputDataTransformer implements DataTransformerInterface
     {
         $output = new Output();
         $output->id = $data->getId();
-        $output->address = $data->getAddress();
+        $output->tmstp = $data->getTmstp();
         $coordinates = $data->getCoordinates();
         $output->lat = $coordinates->getLat();
         $output->lng = $coordinates->getLng();
-        $courier = $data->getCourier();
-        if (null !== $courier) {
-            $output->courier = $this->courierOutputDataTransformer->transform($courier, CourierOutput::class);
-        }
 
         return $output;
     }

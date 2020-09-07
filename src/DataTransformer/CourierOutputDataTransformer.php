@@ -4,10 +4,18 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use App\Dto\CourierOutput as Output;
+use App\Dto\LastPositionOutput;
 use App\Entity\Courier as Entity;
 
 final class CourierOutputDataTransformer implements DataTransformerInterface
 {
+    private $lastPositionOutputDataTransformer;
+
+    public function __construct(LastPositionOutputDataTransformer $lastPositionOutputDataTransformer)
+    {
+        $this->lastPositionOutputDataTransformer = $lastPositionOutputDataTransformer;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -28,6 +36,10 @@ final class CourierOutputDataTransformer implements DataTransformerInterface
     {
         $output = new Output();
         $output->id = $data->getId();
+        $lastPosition = $data->getLastPosition();
+        if (null !== $lastPosition) {
+            $output->lastPosition = $this->lastPositionOutputDataTransformer->transform($lastPosition, LastPositionOutput::class);
+        }
 
         return $output;
     }

@@ -12,7 +12,7 @@ final class TaskOutput
     public $id;
 
     /**
-     * @var ?CourierOutput
+     * @var CourierOutput
      */
     public $courier;
 

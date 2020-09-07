@@ -3,11 +3,19 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
+use App\Dto\DeliveryOutput;
 use App\Dto\SubtaskOutput as Output;
 use App\Entity\Subtask as Entity;
 
 final class SubtaskOutputDataTransformer implements DataTransformerInterface
 {
+    private $deliveryOutputDataTransformer;
+
+    public function __construct(DeliveryOutputDataTransformer $deliveryOutputDataTransformer)
+    {
+        $this->deliveryOutputDataTransformer = $deliveryOutputDataTransformer;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -28,9 +36,12 @@ final class SubtaskOutputDataTransformer implements DataTransformerInterface
     {
         $output = new Output();
         $output->id = $data->getId();
-        $output->delivery = $data->getDelivery();
         $output->priority = $data->getPriority();
         $output->isFinished = $data->getIsFinished();
+        $delivery = $data->getDelivery();
+        if (null !== $delivery) {
+            $output->delivery = $this->deliveryOutputDataTransformer->transform($delivery, DeliveryOutput::class);
+        }
 
         return $output;
     }

@@ -4,7 +4,7 @@ namespace App\Dto;
 
 use Ramsey\Uuid\Uuid;
 
-final class DeliveryOutput
+final class LastPositionOutput
 {
     /**
      * @var Uuid
@@ -14,7 +14,7 @@ final class DeliveryOutput
     /**
      * @var string
      */
-    public $address;
+    public $tmstp;
 
     /**
      * @var string
@@ -25,9 +25,4 @@ final class DeliveryOutput
      * @var string
      */
     public $lng;
-
-    /**
-     * @var ?CourierOutput
-     */
-    public $courier;
 }
