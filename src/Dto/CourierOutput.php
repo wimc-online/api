@@ -10,4 +10,9 @@ final class CourierOutput
      * @var Uuid
      */
     public $id;
+
+    /**
+     * @var ?LastPositionOutput
+     */
+    public $lastPosition;
 }

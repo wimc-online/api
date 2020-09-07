@@ -5,7 +5,6 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
-use App\Controller\PostCourier;
 use App\Dto\CourierCreateInput as CreateInput;
 use App\Dto\CourierOutput as Output;
 use App\Filter\ActiveCourierFilter;
@@ -54,6 +53,7 @@ class Courier
 
     /**
      * @ORM\OneToMany(targetEntity=Position::class, mappedBy="courier", orphanRemoval=true)
+     * @ORM\OrderBy({"tmstp"="DESC"})
      */
     private $positions;
 
@@ -146,6 +146,11 @@ class Courier
         }
 
         return $this;
+    }
+
+    public function getLastPosition(): ?Position
+    {
+        return $this->getPositions()->first();
     }
 
     /**
