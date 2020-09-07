@@ -32,6 +32,7 @@ final class DeliveryOutputDataTransformer implements DataTransformerInterface
         $coordinates = $data->getCoordinates();
         $output->lat = $coordinates->getLat();
         $output->lng = $coordinates->getLng();
+        $output->courier = $data->getCourier();
 
         return $output;
     }
