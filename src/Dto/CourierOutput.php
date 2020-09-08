@@ -12,7 +12,7 @@ final class CourierOutput
     public $id;
 
     /**
-     * @var ?LastPositionOutput
+     * @var ?PositionOutput
      */
     public $lastPosition;
 }

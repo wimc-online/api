@@ -27,7 +27,7 @@ final class DeliveryOutput
     public $lng;
 
     /**
-     * @var ?CourierOutput
+     * @var ?SubtaskOutput
      */
-    public $courier;
+    public $subtask;
 }
