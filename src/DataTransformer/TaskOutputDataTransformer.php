@@ -3,19 +3,11 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\CourierOutput;
 use App\Dto\TaskOutput as Output;
 use App\Entity\Task as Entity;
 
 final class TaskOutputDataTransformer implements DataTransformerInterface
 {
-    private $courierOutputDataTransformer;
-
-    public function __construct(CourierOutputDataTransformer $courierOutputDataTransformer)
-    {
-        $this->courierOutputDataTransformer = $courierOutputDataTransformer;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -36,11 +28,8 @@ final class TaskOutputDataTransformer implements DataTransformerInterface
     {
         $output = new Output();
         $output->id = $data->getId();
+        $output->courier = $data->getCourier();
         $output->isProcessing = $data->getIsProcessing();
-        $courier = $data->getCourier();
-        if (null !== $courier) {
-            $output->courier = $this->courierOutputDataTransformer->transform($courier, CourierOutput::class);
-        }
 
         return $output;
     }

@@ -12,6 +12,11 @@ final class SubtaskOutput
     public $id;
 
     /**
+     * @var TaskOutput
+     */
+    public $task;
+
+    /**
      * @var DeliveryOutput
      */
     public $delivery;

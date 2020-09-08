@@ -148,11 +148,6 @@ class Courier
         return $this;
     }
 
-    public function getLastPosition(): ?Position
-    {
-        return $this->getPositions()->first();
-    }
-
     /**
      * @return Collection|Task[]
      */
