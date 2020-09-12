@@ -3,17 +3,17 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Dto\PositionCreateInput as CreateInput;
-use App\Dto\PositionOutput as Output;
+use App\Dto\PositionCreateInput;
+use App\Dto\PositionOutput;
 use App\Repository\PositionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource(
- *   output=Output::class,
+ *   output=PositionOutput::class,
  *   collectionOperations={
  *       "get",
- *       "post"={"input"=CreateInput::class},
+ *       "post"={"input"=PositionCreateInput::class},
  *   },
  *   itemOperations={
  *       "get",

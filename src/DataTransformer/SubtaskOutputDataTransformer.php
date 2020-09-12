@@ -3,9 +3,8 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\DeliveryOutput;
-use App\Dto\SubtaskOutput as Output;
-use App\Entity\Subtask as Entity;
+use App\Dto\SubtaskOutput;
+use App\Entity\Subtask;
 
 final class SubtaskOutputDataTransformer implements DataTransformerInterface
 {
@@ -14,8 +13,8 @@ final class SubtaskOutputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        $outputMatches = Output::class === $to;
-        $inputMatches = $data instanceof Entity;
+        $outputMatches = SubtaskOutput::class === $to;
+        $inputMatches = $data instanceof Subtask;
 
         return $outputMatches && $inputMatches;
     }
@@ -23,11 +22,11 @@ final class SubtaskOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      *
-     * @param Entity $data
+     * @param Subtask $data
      */
     public function transform($data, string $to, array $context = [])
     {
-        $output = new Output();
+        $output = new SubtaskOutput();
         $output->id = $data->getId();
         $output->task = $data->getTask();
         if (null !== ($context['output']['class'] ?? null)) {

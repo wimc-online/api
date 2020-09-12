@@ -3,8 +3,8 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\PositionOutput as Output;
-use App\Entity\Position as Entity;
+use App\Dto\PositionOutput;
+use App\Entity\Position;
 
 final class PositionOutputDataTransformer implements DataTransformerInterface
 {
@@ -13,8 +13,8 @@ final class PositionOutputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        $outputMatches = Output::class === $to;
-        $inputMatches = $data instanceof Entity;
+        $outputMatches = PositionOutput::class === $to;
+        $inputMatches = $data instanceof Position;
 
         return $outputMatches && $inputMatches;
     }
@@ -22,11 +22,11 @@ final class PositionOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      *
-     * @param Entity $data
+     * @param Position $data
      */
     public function transform($data, string $to, array $context = [])
     {
-        $output = new Output();
+        $output = new PositionOutput();
         $output->id = $data->getId();
         if (null !== ($context['output']['class'] ?? null)) {
             $output->courier = $data->getCourier();

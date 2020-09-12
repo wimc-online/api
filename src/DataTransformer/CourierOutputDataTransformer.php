@@ -3,8 +3,8 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\CourierOutput as Output;
-use App\Entity\Courier as Entity;
+use App\Dto\CourierOutput;
+use App\Entity\Courier;
 
 final class CourierOutputDataTransformer implements DataTransformerInterface
 {
@@ -13,22 +13,21 @@ final class CourierOutputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        $outputMatches = Output::class === $to;
-        $inputMatches = $data instanceof Entity;
+        $outputMatches = CourierOutput::class === $to;
+        $inputMatches = $data instanceof Courier;
 
         return $outputMatches && $inputMatches;
     }
-
     /**
      * {@inheritdoc}
      *
-     * @param Entity $data
+     * @param Courier $data
      */
     public function transform($data, string $to, array $context = [])
     {
-        $output = new Output();
+        $output = new CourierOutput();
         $output->id = $data->getId();
-        $output->lastPosition = $data->getPositions()->first();
+        $output->lastPosition = $data->getPositions()->isEmpty() ? null : $data->getPositions()->first();
 
         return $output;
     }

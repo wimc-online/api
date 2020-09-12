@@ -3,9 +3,9 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\PositionCreateInput as Input;
+use App\Dto\PositionCreateInput;
 use App\Entity\Coordinates;
-use App\Entity\Position as Entity;
+use App\Entity\Position;
 use DateTime;
 
 final class PositionCreateInputDataTransformer implements DataTransformerInterface
@@ -15,9 +15,9 @@ final class PositionCreateInputDataTransformer implements DataTransformerInterfa
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        $alreadyTransformed = $data instanceof Input;
-        $outputMatches = Entity::class === $to;
-        $inputMatches = Input::class === ($context['input']['class'] ?? null);
+        $alreadyTransformed = $data instanceof PositionCreateInput;
+        $outputMatches = Position::class === $to;
+        $inputMatches = PositionCreateInput::class === ($context['input']['class'] ?? null);
 
         return !$alreadyTransformed && $outputMatches && $inputMatches;
     }
@@ -25,11 +25,11 @@ final class PositionCreateInputDataTransformer implements DataTransformerInterfa
     /**
      * {@inheritdoc}
      *
-     * @param Input $data
+     * @param PositionCreateInput $data
      */
     public function transform($data, string $to, array $context = [])
     {
-        $entity = new Entity();
+        $entity = new Position();
         $entity->setCourier($data->courier);
         $tmstp = new DateTime($data->tmstp);
         $entity->setTmstp($tmstp);

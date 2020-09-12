@@ -4,8 +4,8 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Validator\ValidatorInterface;
-use App\Dto\CourierCreateInput as Input;
-use App\Entity\Courier as Entity;
+use App\Dto\CourierCreateInput;
+use App\Entity\Courier;
 
 final class CourierCreateInputDataTransformer implements DataTransformerInterface
 {
@@ -21,9 +21,9 @@ final class CourierCreateInputDataTransformer implements DataTransformerInterfac
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        $alreadyTransformed = $data instanceof Input;
-        $outputMatches = Entity::class === $to;
-        $inputMatches = Input::class === ($context['input']['class'] ?? null);
+        $alreadyTransformed = $data instanceof CourierCreateInput;
+        $outputMatches = Courier::class === $to;
+        $inputMatches = CourierCreateInput::class === ($context['input']['class'] ?? null);
 
         return !$alreadyTransformed && $outputMatches && $inputMatches;
     }
@@ -31,13 +31,13 @@ final class CourierCreateInputDataTransformer implements DataTransformerInterfac
     /**
      * {@inheritdoc}
      *
-     * @param Input $data
+     * @param CourierCreateInput $data
      */
     public function transform($data, string $to, array $context = [])
     {
         $this->validator->validate($data);
 
-        $entity = new Entity();
+        $entity = new Courier();
         $entity->setEmail($data->email);
         $entity->setFirstName($data->firstName);
         $entity->setLastName($data->lastName);

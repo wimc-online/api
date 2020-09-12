@@ -3,8 +3,8 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\DeliveryOutput as Output;
-use App\Entity\Delivery as Entity;
+use App\Dto\DeliveryOutput;
+use App\Entity\Delivery;
 
 final class DeliveryOutputDataTransformer implements DataTransformerInterface
 {
@@ -13,8 +13,8 @@ final class DeliveryOutputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        $outputMatches = Output::class === $to;
-        $inputMatches = $data instanceof Entity;
+        $outputMatches = DeliveryOutput::class === $to;
+        $inputMatches = $data instanceof Delivery;
 
         return $outputMatches && $inputMatches;
     }
@@ -22,11 +22,11 @@ final class DeliveryOutputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      *
-     * @param Entity $data
+     * @param Delivery $data
      */
     public function transform($data, string $to, array $context = [])
     {
-        $output = new Output();
+        $output = new DeliveryOutput();
         $output->id = $data->getId();
         $output->address = $data->getAddress();
         $coordinates = $data->getCoordinates();

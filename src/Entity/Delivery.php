@@ -9,17 +9,17 @@ use App\Controller\GetDeliveryFeaturedCouriers;
 use App\Controller\PostDeliveryCourier;
 use App\Dto\CourierOutput;
 use App\Dto\DeliveryCourierCreateInput;
-use App\Dto\DeliveryCreateInput as CreateInput;
-use App\Dto\DeliveryOutput as Output;
+use App\Dto\DeliveryCreateInput;
+use App\Dto\DeliveryOutput;
 use App\Repository\DeliveryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource(
- *   output=Output::class,
+ *   output=DeliveryOutput::class,
  *   collectionOperations={
  *       "get",
- *       "post"={"input"=CreateInput::class},
+ *       "post"={"input"=DeliveryCreateInput::class},
  *   },
  *   itemOperations={
  *       "get",
@@ -35,7 +35,7 @@ use Doctrine\ORM\Mapping as ORM;
  *           "path"="/deliveries/{id}/courier",
  *           "controller"=PostDeliveryCourier::class,
  *           "input"=DeliveryCourierCreateInput::class,
- *           "output"=Output::class,
+ *           "output"=DeliveryOutput::class,
  *       },
  *   },
  *   normalizationContext={

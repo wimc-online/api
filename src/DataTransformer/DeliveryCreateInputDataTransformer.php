@@ -3,9 +3,9 @@
 namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
-use App\Dto\DeliveryCreateInput as Input;
+use App\Dto\DeliveryCreateInput;
 use App\Entity\Coordinates;
-use App\Entity\Delivery as Entity;
+use App\Entity\Delivery;
 
 final class DeliveryCreateInputDataTransformer implements DataTransformerInterface
 {
@@ -14,9 +14,9 @@ final class DeliveryCreateInputDataTransformer implements DataTransformerInterfa
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        $alreadyTransformed = $data instanceof Input;
-        $outputMatches = Entity::class === $to;
-        $inputMatches = Input::class === ($context['input']['class'] ?? null);
+        $alreadyTransformed = $data instanceof DeliveryCreateInput;
+        $outputMatches = Delivery::class === $to;
+        $inputMatches = DeliveryCreateInput::class === ($context['input']['class'] ?? null);
 
         return !$alreadyTransformed && $outputMatches && $inputMatches;
     }
@@ -24,11 +24,11 @@ final class DeliveryCreateInputDataTransformer implements DataTransformerInterfa
     /**
      * {@inheritdoc}
      *
-     * @param Input $data
+     * @param DeliveryCreateInput $data
      */
     public function transform($data, string $to, array $context = [])
     {
-        $entity = new Entity();
+        $entity = new Delivery();
         $entity->setAddress($data->address);
         $coordinates = new Coordinates();
         $coordinates->setLat($data->lat);

@@ -4,8 +4,8 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
-use App\Dto\DeliveryCourierCreateInput as Input;
-use App\Entity\Delivery as Entity;
+use App\Dto\DeliveryCourierCreateInput;
+use App\Entity\Delivery;
 use App\Entity\DeliveryCourier;
 
 final class DeliveryCourierCreateInputDataTransformer implements DataTransformerInterface
@@ -15,9 +15,9 @@ final class DeliveryCourierCreateInputDataTransformer implements DataTransformer
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        $alreadyTransformed = $data instanceof Input;
-        $outputMatches = Entity::class === $to;
-        $inputMatches = Input::class === ($context['input']['class'] ?? null);
+        $alreadyTransformed = $data instanceof DeliveryCourierCreateInput;
+        $outputMatches = Delivery::class === $to;
+        $inputMatches = DeliveryCourierCreateInput::class === ($context['input']['class'] ?? null);
 
         return !$alreadyTransformed && $outputMatches && $inputMatches;
     }
@@ -25,7 +25,7 @@ final class DeliveryCourierCreateInputDataTransformer implements DataTransformer
     /**
      * {@inheritdoc}
      *
-     * @param Input $data
+     * @param DeliveryCourierCreateInput $data
      */
     public function transform($data, string $to, array $context = [])
     {

@@ -5,8 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
-use App\Dto\CourierCreateInput as CreateInput;
-use App\Dto\CourierOutput as Output;
+use App\Dto\CourierCreateInput;
+use App\Dto\CourierOutput;
 use App\Filter\ActiveCourierFilter;
 use App\Repository\CourierRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,10 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource(
- *   output=Output::class,
+ *   output=CourierOutput::class,
  *   collectionOperations={
  *       "get",
- *       "post"={"input"=CreateInput::class},
+ *       "post"={"input"=CourierCreateInput::class},
  *   },
  *   itemOperations={
  *       "get",

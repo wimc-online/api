@@ -7,8 +7,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
-use App\Dto\TaskUpdateInput as UpdateInput;
-use App\Dto\TaskOutput as Output;
+use App\Dto\TaskUpdateInput;
+use App\Dto\TaskOutput;
 use App\Repository\TaskRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,13 +16,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource(
- *   output=Output::class,
+ *   output=TaskOutput::class,
  *   collectionOperations={
  *       "get",
  *   },
  *   itemOperations={
  *       "get",
- *       "patch"={"input"=UpdateInput::class},
+ *       "patch"={
+ *          "input"=TaskUpdateInput::class
+ *       },
  *       "delete",
  *   },
  *   normalizationContext={

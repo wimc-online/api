@@ -4,8 +4,8 @@ namespace App\DataTransformer;
 
 use ApiPlatform\Core\DataTransformer\DataTransformerInterface;
 use ApiPlatform\Core\Serializer\AbstractItemNormalizer;
-use App\Dto\TaskUpdateInput as Input;
-use App\Entity\Task as Entity;
+use App\Dto\TaskUpdateInput;
+use App\Entity\Task;
 
 final class TaskUpdateInputDataTransformer implements DataTransformerInterface
 {
@@ -14,9 +14,9 @@ final class TaskUpdateInputDataTransformer implements DataTransformerInterface
      */
     public function supportsTransformation($data, string $to, array $context = []): bool
     {
-        $alreadyTransformed = $data instanceof Input;
-        $outputMatches = Entity::class === $to;
-        $inputMatches = Input::class === ($context['input']['class'] ?? null);
+        $alreadyTransformed = $data instanceof TaskUpdateInput;
+        $outputMatches = Task::class === $to;
+        $inputMatches = TaskUpdateInput::class === ($context['input']['class'] ?? null);
 
         return !$alreadyTransformed && $outputMatches && $inputMatches;
     }
@@ -24,7 +24,7 @@ final class TaskUpdateInputDataTransformer implements DataTransformerInterface
     /**
      * {@inheritdoc}
      *
-     * @param Input $data
+     * @param TaskUpdateInput $data
      */
     public function transform($data, string $to, array $context = [])
     {

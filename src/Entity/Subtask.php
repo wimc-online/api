@@ -3,18 +3,18 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Dto\SubtaskUpdateInput as UpdateInput;
-use App\Dto\SubtaskOutput as Output;
+use App\Dto\SubtaskUpdateInput;
+use App\Dto\SubtaskOutput;
 use App\Repository\SubtaskRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource(
- *   output=Output::class,
+ *   output=SubtaskOutput::class,
  *   collectionOperations={},
  *   itemOperations={
  *       "get",
- *       "patch"={"input"=UpdateInput::class},
+ *       "patch"={"input"=SubtaskUpdateInput::class},
  *       "delete",
  *   },
  *   normalizationContext={
