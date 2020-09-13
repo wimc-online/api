@@ -38,6 +38,12 @@ final class KeycloakDataPersister implements ContextAwareDataPersisterInterface
                 $this->keycloak->deleteCourier($data);
                 throw new RuntimeException('Cannot update courierId in Keycloak.');
             }
+            try {
+                $this->keycloak->resetCourierPassword($data);
+            } catch (RuntimeException $exception) {
+                $this->keycloak->deleteCourier($data);
+                throw new RuntimeException('Cannot reset courier password in Keycloak.');
+            }
         }
 
         return $this->decorated->persist($data, $context);
