@@ -41,3 +41,4 @@ services:
             - '%env(resolve:KEYCLOAK_REALM)%'
             - '%env(resolve:KEYCLOAK_CLIENT_ID)%'
             - '%env(resolve:KEYCLOAK_CLIENT_SECRET)%'
+            - '%env(resolve:KEYCLOAK_RESET_PASSWORD)%'

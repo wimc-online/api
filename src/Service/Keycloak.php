@@ -30,12 +30,18 @@ class Keycloak
      */
     private $adminApiUrl;
 
-    public function __construct(string $domain, string $realm, string $clientId, string $clientSecret)
+    /**
+     * @var string
+     */
+    private $resetPassword;
+
+    public function __construct(string $domain, string $realm, string $clientId, string $clientSecret, string $resetPassword)
     {
         $this->domain = $domain;
         $this->realm = $realm;
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
+        $this->resetPassword = $resetPassword;
 
         $this->authUrl = "https://{$this->domain}/auth/realms/{$this->realm}";
         $this->adminApiUrl = "https://{$this->domain}/auth/admin/realms/{$this->realm}";
@@ -127,6 +133,34 @@ class Keycloak
         }
 
         return $courier;
+    }
+
+    /**
+     * @throws RuntimeException
+     */
+    public function resetCourierPassword(Courier $courier): void
+    {
+        if (!$this->isAuthorized()) {
+            $this->authorize();
+        }
+
+        $options = [
+                CURLOPT_URL => "{$this->adminApiUrl}/users/{$courier->getId()}/reset-password",
+                CURLOPT_CUSTOMREQUEST => 'PUT',
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode([
+                    'value' => $this->resetPassword,
+                ]),
+            ] + $this->getDefaultOptions();
+
+        $ch = curl_init();
+        curl_setopt_array($ch, $options);
+        curl_exec($ch);
+        $responseCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+        curl_close($ch);
+        if (204 !== $responseCode) {
+            throw new RuntimeException('Error resetting courier password in Keycloak.');
+        }
     }
 
     /**
