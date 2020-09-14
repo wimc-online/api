@@ -30,6 +30,7 @@ final class TaskOutputDataTransformer implements DataTransformerInterface
         $output->id = $data->getId();
         $output->courier = $data->getCourier();
         $output->isProcessing = $data->getIsProcessing();
+        $output->isFinished = $data->getIsFinished();
 
         return $output;
     }

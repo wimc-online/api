@@ -9,6 +9,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\ExistsFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use App\Dto\TaskUpdateInput as UpdateInput;
 use App\Dto\TaskOutput as Output;
+use App\Filter\FinishedTaskFilter;
 use App\Repository\TaskRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -31,6 +32,7 @@ use Doctrine\ORM\Mapping as ORM;
  * )
  * @ApiFilter(ExistsFilter::class, properties={"courier"})
  * @ApiFilter(BooleanFilter::class, properties={"is_processing"})
+ * @ApiFilter(FinishedTaskFilter::class, properties={"is_finished"})
  * @ORM\Entity(repositoryClass=TaskRepository::class)
  */
 class Task
@@ -121,5 +123,16 @@ class Task
         }
 
         return $this;
+    }
+
+    public function getIsFinished(): ?bool
+    {
+        foreach ($this->getSubtasks() as $subtask) {
+            if (!$subtask->getIsFinished()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
