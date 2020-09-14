@@ -20,4 +20,9 @@ final class TaskOutput
      * @var bool
      */
     public $isProcessing;
+
+    /**
+     * @var bool
+     */
+    public $isFinished;
 }
